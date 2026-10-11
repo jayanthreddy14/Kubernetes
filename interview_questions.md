@@ -1,4 +1,4 @@
-L;DR
+
 Kubernetes (K8s) is the industry standard for orchestrating containerized applications — it handles deployment, scaling, self-healing, and service discovery automatically.
 Interview questions span three levels: basic (Pods, Services, Deployments, ConfigMaps), intermediate (networking, autoscaling, RBAC, rolling updates), and advanced (StatefulSets, operators, cluster security, etcd management).
 Hands-on practice with Minikube, Kind, or a managed cloud cluster is the most effective interview preparation — interviewers test applied troubleshooting, not just definitions.
@@ -67,7 +67,7 @@ spec:
     ports:
     - containerPort: 80
 
-Powered By 
+ 
 2. What is the purpose of kubectl?
 Kubectl is the primary CLI tool for managing Kubernetes resources and interacting with the cluster. Here are a few common kubectl commands you should be familiar with:
 
@@ -76,7 +76,7 @@ kubectl get services 			 # list all Services
 kubectl logs <pod-name> 	  	 # view logs of a Pod
 kubectl exec -it <pod-name> -- /bin/sh # open a shell inside a Pod
 
-Powered By 
+ 
 3. What is a Deployment in Kubernetes?
 A Deployment in Kubernetes is a higher-level abstraction that manages the lifecycle of Pods. It ensures that the desired number of replicas are up and running and provides features like rolling updates, rollbacks, and self-healing. 
 
@@ -102,7 +102,7 @@ spec:
         ports:
         - containerPort: 80
 
-Powered By 
+ 
 4. What is a Kubernetes Service, and why is it needed?
 A Service in Kubernetes exposes a group of Pods and allows communication between and to them. 
 
@@ -123,7 +123,7 @@ spec:
       targetPort: 80
   type: ClusterIP
 
-Powered By 
+ 
 The above Service forwards traffic to Pods that have the label app: my-app.
 
 5. What service types are available at Kubernetes Services?
@@ -147,7 +147,7 @@ metadata:
 data:
   database_url: "postgres://db.example.com"
 
-Powered By 
+ 
 Example secret YAML definition (with base64 encoded [not encrypted] data):
 
 apiVersion: v1
@@ -158,7 +158,7 @@ type: Opaque
 data:
   password: cGFzc3dvcmQ=  # "password" encoded in Base64
 
-Powered By 
+ 
 7. What are Namespaces in Kubernetes?
 A Namespace is a virtual cluster within a Kubernetes cluster. It helps to organize workloads in multi-tenant environments by isolating resources within a cluster.
 
@@ -173,7 +173,7 @@ kubectl run nginx --image=nginx --namespace=dev
 # get Pods in that namespace
 kubectl get pods --namespace=dev
 
-Powered By 
+ 
 8. What are Labels and Selectors in Kubernetes?
 Labels are key/value pairs attached to objects (e.g. Pods). They help to organize Kubernetes objects. Selectors filter resources based on Labels. 
 
@@ -193,12 +193,12 @@ spec:
     ports:
     - containerPort: 80
 
-Powered By 
+ 
 You could now use the following label selector to fetch all Pods that have the label environment: production assigned:
 
 kubectl get pods -l environment=production
 
-Powered By 
+ 
 9. What are Persistent Volumes (PVs) and Persistent Volume Claims (PVCs)?
 Persistent Volumes (PVs) provide storage that persists beyond Pod lifecycles. The PV is a storage piece in the cluster that has been provisioned by a cluster administrator or dynamically provisioned using Storage Classes.
 
@@ -219,7 +219,7 @@ spec:
   hostPath:
     path: "/mnt/data"
 
-Powered By 
+ 
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -231,7 +231,7 @@ spec:
     requests:
       storage: 1Gi
 
-Powered By 
+ 
 Intermediate Kubernetes Interview Questions
 Now that you practiced the basics, we can move to intermediate-level questions. Understanding concepts such as networking, security, resource management, and troubleshooting is essential at this level.
 
@@ -260,7 +260,7 @@ rules:
     resources: ["pods"]
     verbs: ["get", "watch", "list"]
 
-Powered By 
+ 
 This pod-reader role can now be bound to a user using RoleBinding:
 
 apiVersion: rbac.authorization.k8s.io/v1
@@ -275,7 +275,7 @@ roleRef:
   name: pod-reader
   apiGroup: rbac.authorization.k8s.io
 
-Powered By 
+ 
 12. How does Kubernetes autoscaling work?
 Kubernetes provides three types of autoscaling to optimize resource usage:
 
@@ -286,7 +286,7 @@ You can create an HPA using kubectl:
 
 kubectl autoscale deployment nginx --cpu-percent=50 --min=1 --max=10
 
-Powered By 
+ 
 The above command creates an HPA for a Deployment with the name nginx and tries to keep the average CPU utilization across all Pods at 50%, with a minimum number of replicas at 1 and a maximum number of replicas at 10.
 
 13. How do you debug Kubernetes Pods?
@@ -308,7 +308,7 @@ kubectl exec -it <pod-name> -- /bin/sh
 # check all failing pods
 kubectl get pods --field-selector=status.phase=Failed
 
-Powered By 
+ 
 These commands help identify misconfigurations, resource constraints, or application errors.
 
 14. What is the difference between liveness and readiness probes?
@@ -339,7 +339,7 @@ spec:
       initialDelaySeconds: 5
       periodSeconds: 3
 
-Powered By 
+ 
 A common mistake is using a liveness probe where a readiness probe is needed. If your app is slow to start, a misconfigured liveness probe will kill and restart it before it has a chance to come up — causing a restart loop that looks identical to an application crash.
 
 15. How do you perform rolling updates and rollbacks in Kubernetes?
@@ -347,17 +347,17 @@ Kubernetes Deployments support rolling updates to avoid downtime. You can perfor
 
 kubectl set image deployment/my-deployment nginx=nginx:1.21
 
-Powered By 
+ 
 You can then check the Deployment status:
 
 kubectl rollout status deployment my-deployment
 
-Powered By 
+ 
 If you want to roll back to the previous version, you can run:
 
 kubectl rollout undo deployment my-deployment
 
-Powered By 
+ 
 16. What is an Ingress in Kubernetes, and how does it work?
 An Ingress is an API object that manages external HTTP/HTTPS access to Services inside a Kubernetes cluster.  It allows routing requests based on hostname and paths, acting as a reverse proxy for multiple applications.
 
@@ -380,7 +380,7 @@ spec:
                 port:
                   number: 80
 
-Powered By 
+ 
 17. What is the Kubernetes Gateway API, and how is it different from Ingress?
 The Gateway API is the modern evolution of Kubernetes networking that aims to replace standard Ingress. While Ingress was designed for simple HTTP routing, it became limited and fragmented as clusters grew more complex.
 
@@ -411,7 +411,7 @@ spec:
           memory: "512Mi"
           cpu: "500m"
 
-Powered By 
+ 
 19. What happens if a Pod resource needs to grow beyond the assigned limits?
 If a Pod’s memory consumption exceeds its assigned memory limit, Kubernetes immediately kills the container with an out of memory (OOM) error. The container restarts if a restart policy is defined.
 
@@ -435,7 +435,7 @@ spec:
     - name: my-app
       image: my-app-image
 
-Powered By 
+ 
 21. How does Kubernetes handle Pod disruptions and high availability?
 Kubernetes ensures high availability through Pod Disruption Budgets (PDBs), anti-affinity rules, and self-healing mechanisms. Here’s how these mechanisms work:
 
@@ -454,7 +454,7 @@ spec:
     matchLabels:
       app: my-app
 
-Powered By 
+ 
 Advanced Kubernetes Interview Questions
 This section covers advanced Kubernetes interview questions, focusing on stateful applications, multi-cluster management, security, performance optimization, and troubleshooting. If you’re applying to a senior position, make sure to check these out.
 
@@ -490,7 +490,7 @@ Here’s an example for tainting a node only to accept specific workloads:
 
 kubectl taint nodes node1 key1=value1:NoSchedule
 
-Powered By 
+ 
 This means no Pod can be scheduled on node1 until it has the required Toleration.
 
 A Toleration is added in the PodSpec section like the following:
@@ -512,7 +512,7 @@ spec:
     value: "value1"
     effect: "NoSchedule"
 
-Powered By 
+ 
 The Pod would be allowed to be scheduled on node1.
 
 26. What are Kubernetes sidecar containers, and how are they used?
@@ -543,7 +543,7 @@ spec:
     - name: shared-logs
       emptyDir: {}
 
-Powered By 
+ 
 The sidecar container runs Fluentd, which collects logs from the main container via a shared volume.
 
 27. What are Native Sidecars (SidecarContainers), and what problem do they solve?
@@ -563,7 +563,7 @@ You can check the events of the Pod using the describe command:
 
 kubectl describe pod <pod-name>
 
-Powered By 
+ 
 29. What is a Kubernetes mutating admission webhook, and how does it work?
 A mutating admission webhook allows real-time modification of Kubernetes objects before they are applied to the cluster and persisted. It runs a dynamic admission controller in Kubernetes that intercepts API requests before objects are persisted in etcd. It can modify the request payload by injecting, altering, or removing fields before allowing the request to proceed.
 
@@ -625,12 +625,12 @@ spec:
       name: Size
       type: string
 
-Powered By 
+ 
 You could now, for example, retrieve the shirt object using kubectl:
 
 kubectl get shirts
 
-Powered By 
+ 
 Discover how to leverage Docker and Kubernetes for machine learning workflows in this hands-on tutorial on containerization.
 
 32. What are Kubernetes operators, and how do they work?
@@ -674,7 +674,7 @@ spec:
             memory: "200Mi"
             cpu: "100m"
 
-Powered By 
+ 
 Kubernetes Interview Questions for Administrators
 Kubernetes administrators maintain, secure, and optimize clusters for production workloads. This section covers Kubernetes interview questions focusing on cluster management.
 
@@ -687,12 +687,12 @@ ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 \
   --cacert=<trusted-ca-file> --cert=<cert-file> --key=<key-file> \
   snapshot save <backup-file-location>
 
-Powered By 
+ 
 If you now want to restore from a backup, you can run:
 
 etcdutl --data-dir <data-dir-location> snapshot restore snapshot.db
 
-Powered By 
+ 
 35. How do you safely upgrade a Kubernetes cluster?
 Upgrading a Kubernetes cluster is a multi-step process that requires minimal downtime and maintains cluster stability. Administrators should follow a structured approach to prevent issues during the upgrade:
 
@@ -754,7 +754,7 @@ resources:
               secret: <BASE64_ENCODED_SECRET>
       - identity: {}
 
-Powered By 
+ 
 The configuration above specifies that Kubernetes will use the aescbc provider to encrypt Secret resources, with a fallback to identity for unencrypted data.
 
 Next, you need to adapt the kube-apiserver configuration file, typically found at /etc/kubernetes/manifests/kube-apiserver.yaml on a control plane node, and include the -- encryption-provider-config flag pointing to the encryption configuration file that you’ve created:
@@ -764,7 +764,7 @@ command:
   ...
   - --encryption-provider-config=/path/to/encryption-config.yaml
 
-Powered By 
+ 
 Save the changes and restart the kube-apiserver to apply the new configuration.
 
 42. How do you manage Kubernetes resource quotas in multi-tenant environments?
@@ -787,12 +787,12 @@ spec:
     limits.memory: "16Gi"
     pods: "20"
 
-Powered By 
+ 
 You can check the ResourceQuota of a namespace using:
 
 kubectl describe resourcequota namespace-quota -n team-a
 
-Powered By 
+ 
 43. What is CoreDNS? How do you configure and use it?
 CoreDNS is the default DNS provider for Kubernetes clusters. It provides service discovery and allows Pods to communicate using internal DNS names instead of IP addresses.
 
@@ -806,7 +806,7 @@ You can configure CoreDNS using the ConfigMap stored in the kube-system namespac
 
 kubectl get configmap coredns -n kube-system -o yaml
 
-Powered By 
+ 
 Simply update that ConfigMap and apply the changes to adapt the CoreDNS configuration.
 
 Scenario-Based and Problem-Solving Kubernetes Interview Questions
@@ -822,29 +822,29 @@ You can approach the problem using the following steps:
 kubectl top pods --sort-by=cpu
 kubectl top pods --sort-by=memory
 
-Powered By 
+ 
 2. Describe the slow Pod to get more information. Look for resource throttling, restart counts, or liveness probe failures.
 
 kubectl describe pod <pod-name>
 
-Powered By 
+ 
 3. Check container logs for errors. Look for timeouts, errors, or connection failures.
 
 kubectl logs <pod-name>
 
-Powered By 
+ 
 4. Test network latency, as they can slow down applications.
 
 kubectl exec -it <pod-name> -- ping my-database
 kubectl exec -it <pod-name> -- curl http://my-service
 
-Powered By 
+ 
 5. Verify Kubernetes node health and check for resource exhaustion on nodes.
 
 kubectl get nodes
 kubectl describe node <node-name>
 
-Powered By 
+ 
 45. An Nginx web server is running, but the exposed URL fails to connect
 “You deployed an Nginx web server in Kubernetes, and the Pod is running fine, but the application is not accessible via the exposed URL. What can you do about it?”
 
@@ -855,23 +855,23 @@ Steps to approach the above problem:
 kubectl get pods -o wide
 kubectl describe pod nginx-web
 
-Powered By 
+ 
 2. Check the Service and port mapping. Ensure the correct port is exposed and matches the Pod’s container port. Check that the Service finds the correct Pods.
 
 kubectl describe service nginx-service
 
-Powered By 
+ 
 3. Check network policies. If a network policy blocks ingress traffic, the Service won’t be accessible.
 
 kubectl get networkpolicies
 kubectl describe networkpolicy <policy-name>
 
-Powered By 
+ 
 4. Verify Ingress and external DNS configuration. 
 
 kubectl describe ingress nginx-ingress
 
-Powered By 
+ 
 46. Kubernetes Deployment fails after an upgrade
 “You deployed a new version of your application, but it fails to start, causing downtime for your users. How can you fix the problem?”
 
@@ -881,17 +881,17 @@ Approach to tackle the problem:
 
 kubectl rollout undo deployment my-app
 
-Powered By 
+ 
 2. Check the Deployment history and identify what has changed in the new version.
 
 kubectl rollout history deployment my-app
 
-Powered By 
+ 
 3. Check the new Pod’s logs for errors.
 
 kubectl logs -l app=my-app
 
-Powered By 
+ 
 4. Check readiness and liveness probes.
 
 5. Verify image-pulling issues. Sometimes, the new image is wrong or unavailable.
@@ -905,18 +905,18 @@ Steps to approach the problem:
 
 kubectl exec -it <pod-name> -- curl http://my-database.example.com:5432
 
-Powered By 
+ 
 2. Check DNS resolution inside the Pod. If it fails, CoreDNS may be configured wrong.
 
 kubectl exec -it <pod-name> -- nslookup my-database.example.com
 
-Powered By 
+ 
 3. Check if network policies exist that block external access, as they can prevent outbound traffic.
 
 kubectl get networkpolicies
 kubectl describe networkpolicy <policy-name>
 
-Powered By 
+ 
 48. Cluster resources are exhausted, causing new Pods to remain in a pending state
 “New pods stay in the state Pending. Looking deeper into the pods, we see that the message “0/3 nodes are available: insufficient CPU and memory”. How do you go about debugging and solving the problem?”
 
@@ -927,17 +927,17 @@ Steps to approach the problem:
 kubectl describe node <node-name>
 kubectl top nodes
 
-Powered By 
+ 
 2. Check which Pods are consuming the most resources. Set resources and limits for Pods to ensure they are not over-consuming. You can also enforce that for all namespaces in the cluster.
 
 kubectl top pods --all-namespaces
 
-Powered By 
+ 
 3. Scale down non-essential workloads to free up resources.
 
 kubectl scale deployment <deployment-name> --replicas=0
 
-Powered By 
+ 
 4. Increase available nodes to increase cluster resources. You can also add more nodes to the cluster autoscaler if one is used.
 
 Tips for Preparing for a Kubernetes Interview
