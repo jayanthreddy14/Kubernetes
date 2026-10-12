@@ -1,3 +1,4 @@
+https://www.datacamp.com/blog/kubernetes-interview-questions?utm_cid=19589720824&utm_aid=186331389109&utm_campaign=230119_1-ps-other~dsa-tofu~all_2-b2c_3-apac_4-prc_5-na_6-na_7-le_8-pdsh-go_9-nb-e_10-na_11-na&utm_loc=9303543-&utm_mtd=-c&utm_kw=&utm_source=google&utm_medium=paid_search&utm_content=ps-other~apac-en~dsa~tofu~blog~kubernetes&gad_source=1&gad_campaignid=19589720824&gbraid=0AAAAADQ9WsFY5Ka-uCBeZw_efe8EsxPow&gclid=Cj0KCQjwxKfWBhDkARIsAMKwkNbIHMhSN-ua4IkMys87YxaEXMPvfrnSoxHQgkzFDsKRaIzesuPfk7MaAq1hEALw_wcB
 
 Kubernetes (K8s) is the industry standard for orchestrating containerized applications — it handles deployment, scaling, self-healing, and service discovery automatically.
 Interview questions span three levels: basic (Pods, Services, Deployments, ConfigMaps), intermediate (networking, autoscaling, RBAC, rolling updates), and advanced (StatefulSets, operators, cluster security, etcd management).
