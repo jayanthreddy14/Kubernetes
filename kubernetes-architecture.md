@@ -1,7 +1,7 @@
 
 Content
 
-![alt text](image.png)
+![alt text](images/image.png)
 
 Architecture
 What are containers?
@@ -20,12 +20,11 @@ Ending Notes
 Architecture
 Kubernetes is a powerful container management tool that automates the deployment and management of containers. It can run and coordinate containerized applications across a cluster of machines. It is a platform designed to completely manage the life cycle of containerized applications and services using methods that provide predictability, scalability, and high availability. Kubernetes can define how your applications should run and how application interact with other applications or the outside world.
 
-Press enter or click to view image in full size
+![alt text](images/image-1.png)
 
-Source
-Press enter or click to view image in full size
+![alt text](images/image-2.png)
 
-Source
+
 Kubernetes deployment is called a cluster. A Kubernetes cluster consists of at least one main (control) plane, and one or more worker machines, called nodes. Both the control planes and node instances can be physical devices, virtual machines, or instances in the cloud.
 
 What are containers?
@@ -34,6 +33,8 @@ Stuff like your application code, dependent libraries, and its dependencies all 
 Workspace isolation (Process, Network)
 Resource isolation (CPU, Memory)
 File system isolation (Union File System)
+
+
 What features Does K8s Offer?
 Service discovery and load balancing
 Kubernetes can expose a container using the DNS name or using their own IP address. If traffic to a container is high, Kubernetes is able to load balance and distribute the network traffic so that the deployment is stable.
@@ -51,6 +52,8 @@ Secret and configuration management
 Kubernetes lets you store and manage sensitive information, such as passwords, OAuth tokens, and SSH keys. You can deploy and update secrets and application configuration without rebuilding your container images, and without exposing secrets in your stack configuration.
 Assures high availability with zero downtime
 Reliable infrastructure to support data recovery with ease
+
+
 Why you need Kubernetes?
 Containers are a good way to bundle and run your applications. They provide you with an easy way to package and deploy services, allow for process isolation, immutability, efficient resource utilization, and are lightweight in creation.
 
@@ -68,6 +71,8 @@ Deploying and updating software at scale
 Better management through modularity
 Auto healing
 Logging and Monitoring
+
+
 Worker Node
 Every worker as shown in picture below has these 3 key processes :
 
@@ -75,7 +80,12 @@ Container Runtime
 kubelet
 kube-proxy
 
+![alt text](images/image-3.png)
+
 Worker Node
+
+
+
 kubelet
 kubelet is a primary node-agent of the worker node, which interacts with both node and the container in the given worker node
 
@@ -125,7 +135,7 @@ etcd
 kube-apiserver:
 It is the main gateway to access the k8s cluster and act as the main gatekeeper for client level authentication or we can say that the kube-apiserver is the front end for the Kubernetes control plane.
 
-Press enter or click to view image in full size
+![alt text](images/image-4.png)
 
 kube-api server in master node
 So whenever you want to
@@ -195,22 +205,18 @@ Kubernetes Objects are persistent entities in the Kubernetes system that represe
 
 Kubernetes objects can be distinguished between workload-oriented objects that are used for handling container workloads and infrastructure-oriented objects, that for example handle configuration, networking and security. Some of these objects can be put into a namespace, while others are available across the whole cluster.
 
-Get Vivek Singh’s stories in your inbox
-Join Medium for free to get updates from this writer.
 
-Enter your email
-Subscribe
-
-Remember me for faster sign in
 
 we can describe these objects in the popular data-serialization language YAML and send them to the api-server, where they get validated before they are created.
 
-Press enter or click to view image in full size
+![alt text](images/image-5.png)
 
 Kubernetes Objects
 K8s components :
 Pods: Smallest unit of k8s, which is an abstraction of the container application. Pod is a group of one or more containers, with shared storage and network resources, and a specification for how to run the containers.
+
 Nodes: The machines on Kubernetes. They can be either a physical or a virtual machine. Pods are scheduled and orchestrated to run on nodes.
+
 Deployment provides declarative updates for Pods and ReplicaSets. You describe a desired state in a Deployment, and the Deployment Controller changes the actual state to the desired state at a controlled rate.
 ReplicaSet’s purpose is to maintain a stable set of replica Pods (Identical Pods) running at any given time.
 Services & Ingress: To manage external communication between nodes and internal pod level communication
@@ -225,26 +231,39 @@ Some typical uses of a DaemonSet are:
 Job runs pods that perform a completable task. Job creates one or more Pods and will continue to retry execution of the Pods until a specified number of them successfully terminate. Deleting a Job will clean up the Pods it created. Suspending a Job will delete its active Pods until the Job is resumed again.
 CronJob creates Jobs on a repeating schedule. CronJobs are meant for performing regular scheduled actions such as backups, report generation, and so on.
 Namespaces provides a mechanism for isolating groups of resources within a single cluster.Namespace-based scoping is applicable only for namespaced objects (e.g. Deployments, Services, etc) and not for cluster-wide objects (e.g. StorageClass, Nodes, PersistentVolumes, etc).
+
+
 Service
 Service is used to expose an application deployed on a set of pods using a single endpoint. i.e. It maps a fixed IP address to a logical group of pods.
 Service provides stable networking for pods (ephemeral pods) by bringing stable IP addresses and DNS names, and provide a way to Kubernetes to configuring a proxy to forward traffic to a set of pods.
 Service enables communication between nodes, pods, and users of app, both internal and external, to the cluster. Service also provides load balancing when you have Pod replicas.
 There are four types of Kubernetes services — ClusterIP, NodePort, LoadBalancer and ExternalName.
+
+
 Ingress
+
 Ingress manages external access to the services in a cluster, typically HTTP/S.
 Ingress may provide load balancing, SSL termination and name-based virtual hosting.
 Ingress exposes one or more services to external clients through a single externally reachable IP address.
 Traffic routing is controlled by rules defined on the Ingress resource.
 Ingress controller is responsible for fulfilling the Ingress, usually with a load balancer.
+
+
 Network Policy (NetPol)
+
 Network Policy isolates the network between pods by specifying which pods can connect to each other, and other network endpoints.
 Network Policy works on OSI Layer 3 and Layer 4.
 Network policies are implemented by the network plugin.
+
+
 Endpoint
+
 Endpoint defines which pods (or other servers) are exposed through a service.
 For Kubernetes Services, Kubernetes creates a Endpoint object. This endpoint will have the ip address mapping of the pods. This is created automatically for services with a defined selector.
 Endpoints can also be used to connect to external services like they were internal to the kubernetes cluster.
+
 EndpointSlice
+
 EndpointSlices provide a simple way to track network endpoints within a Kubernetes cluster.
 EndpointSlices offer a more scalable and extensible alternative to Endpoints.
 EndpointSlice contains references to a set of network endpoints.
@@ -252,65 +271,94 @@ EndpointSlice
 EndpointSlices provide a simple way to track network endpoints within a Kubernetes cluster.
 EndpointSlices offer a more scalable and extensible alternative to Endpoints.
 EndpointSlice contains references to a set of network endpoints
+
+
 Persistent Volumes (PV)
+
 PV is a low level representation of a storage volume. It is an abstraction for the physical storage device that is attached to the cluster.
 PV can be mounted into a pod through a PVC.
 PV is resource in the cluster that can be provisioned dynamically using Storage Classes, or they can be explicitly created by a cluster administrator.
 PV is independent of the lifecycle of the Pods. It means that data represented by a PV continue to exist as the cluster changes and as Pods are deleted and recreated.
+
+
 Persistent Volume Claim (PVC)
+
 PVC is binding between a Pod and PV. Pod request the Volume through the PVC.
 PVC is the request to provision persistent storage with a specific type and configuration.
 PVCs describe the storage capacity and characteristics a pod requires, and the cluster attempts to match the request and provision the desired persistent volume.
 PVC must be in same namespace as the Pod. For each Pod, a PVC makes a storage consumption request within a namespace.
 PVC is similar to a Pod. Pods consume node resources and PVC consume PV resources.
+
+
 Storage Classes (SC)
+
 StorageClass allows dynamic provisioning of Persistent Volumes, when PVC claims it.
 StorageClass abstracts underlying storage provider.
 StorageClass is used in conjunction with PVC that allow Pods to dynamically request a new storage.
+
+
 ConfigMaps
 ConfigMap is used to store non-confidential data in key-value pairs.
 Pods can consume ConfigMaps as environment variables, command-line arguments, or as configuration files in a volume.
 ConfigMap allows you to decouple environment-specific configuration from your container images, so that your applications are easily portable.
+
+
 Secrets
 Secrets are similar to ConfigMaps but are specifically intended to hold confidential data.
 Secret allows you store and manage a small amount of sensitive information such as passwords, tokens, keys, SSH keys, etc.
 With Secret, you don’t need to include confidential data in your application code.
 Secrets can be created independently of the Pods that use them.
+
+
 Service Account
 Kubernetes uses Service Accounts to authenticate and authorize requests by pods to the Kubernetes API server.
 Service Account provides an identity for processes that run in a Pod.
+
+
 Role
 Role defines what can be done to Kubernetes Resources.
 Role contains one or more rules that represent a set of permissions.
 Roles are namespaced, meaning Roles work within the constraints of a namespace.
 After creating a Role, you assign it to a user or group of users by creating a RoleBinding.
+
+
 ClusterRole
 ClusterRole works the same as Role, but they are applied to the cluster as a whole.
 ClusterRoles are not bound to a specific namespace. ClusterRole give access across more than one namespace or all namespaces.
 After creating a ClusterRole, you assign it to a user or group of users by creating a RoleBinding or ClusterRoleBinding.
 ClusterRoles are typically used with service accounts.
+
+
 RoleBinding
 RoleBinding is used for granting permission to a Subject.
 RoleBinding holds a list of subjects (users, groups, or service accounts), and a reference to the role being granted.
 Role and RoleBinding are used in namespaced scoped.
 RoleBinding may reference any Role in the same namespace.
 Defines who can perform the actions defined in a Role or ClusterRole (within a namespace).
+
+
 ClusterRoleBinding
 ClusterRole and ClusterRoleBinding function like Role and RoleBinding, except they have wider scope.
 RoleBinding grants permissions within a specific namespace, whereas a ClusterRoleBinding grants access cluster-wide and to multiple namespaces.
 ClusterRoleBinding is binding or associating a ClusterRole with a Subject (users, groups, or service accounts).
+
+
 Horizontal Pod Autoscaler (HPA)
 HPA automatically updates a workload resource (such as a Deployment or StatefulSet), with the aim of automatically scaling the workload to match demand.
 HPA automatically scales number of pod replicas based on CPU usage or another metric.
 HPA controls the scale of a Deployment and its ReplicaSet.
+
+
 Pod Disruption Budget (PDB)
 PDB limits the number of Pods of a replicated application that are down simultaneously from voluntary disruptions.
 PDB can temporarily halt the eviction process if the number of replicas of an application falls below the declared threshold. Eviction process will continue once the number of available replicas is over the threshold.
 PDB defines the minimum number of pods that must remain running when evacuating nodes.
-Ingress
-Press enter or click to view image in full size
 
-Source
+
+Ingress
+![alt text](images/image-6.png)
+
+
 Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource. You can configure access by creating a collection of rules that define which inbound connections reach which services.
 
 An Ingress controller is responsible for fulfilling the Ingress, usually with a load balancer, though it may also configure your edge router or additional frontends to help handle the traffic.
@@ -320,21 +368,28 @@ The Ingress spec has all the information needed to configure a load balancer or 
 An Ingress does not expose arbitrary ports or protocols. Exposing services other than HTTP and HTTPS to the internet typically uses a service of type NodePort or LoadBalancer.
 
 Ingress controllers
+
 Ingress controller is an application that runs in a cluster and configures an HTTP load balancer according to Ingress resources. The load balancer can be a software load balancer running in the cluster or a hardware or cloud load balancer running externally. Different load balancers require different Ingress controller implementations.
 In order to Ingress resource work, the cluster must have an ingress controller running.
 You can deploy any number of ingress controllers within a cluster.
 There are many different Ingress controllers, and there’s support for cloud-native load balancers (from GCP, AWS, and Azure).
 e.g. Nginx, Ambassador, EnRoute, HAProxy, AWS ALB, AKS Application Gateway
+
 Use Cases
 Externally reachable URLs for applications deployed in Kubernetes clusters.
 Load balancing rules and traffic, as well as TLS/SSL termination for each hostname, such as foo.example.com.
 Content-based routing:
 1. Host-based routing. For example, routing requests with the host header foo.example.com to one group of services and the host header bar.example.com to another group.
 2. Path-based routing. For example, routing requests with the URI that starts with /serviceA to service A and requests with the URI that starts with /serviceB to service B.
-Services
-Press enter or click to view image in full size
 
-Source
+
+
+Services
+
+
+![alt text](images/image-7.png)
+
+
 What is a Service in Kubernetes?
 Kubernetes service is a Kubernetes object that provides stable networking for pods and provide a way to Kubernetes to configuring a proxy to forward traffic to a set of pods.
 
