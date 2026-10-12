@@ -1,13 +1,7 @@
 
-
-Kubernetes Container Orchestration
-
-
-
-
-Press enter or click to view image in full size
-
 Content
+
+![alt text](image.png)
 
 Architecture
 What are containers?
@@ -395,86 +389,3 @@ Docker Hub
 Amazon Elastic Container Registry (ECR)
 Azure Container Registry (ACR)
 Google Container Registry (GCR)
-References:
-Kubernetes Fundamentals For Absolute Beginners: Architecture & Components
-Learning Kubernetes architecture & components
-medium.com
-
-Kubernetes — Architecture Overview
-Introduction to Kubernetes Architecture and Understanding K8s Cluster Components.
-medium.com
-
-Kubernetes (K8s) Overview
-What is Kubernetes — Introduction to Kubernetes (K8s) Orchestration
-medium.com
-
-Kubernetes — Objects (Resources/Kinds) Overview
-Introduction (Understanding) to Kubernetes Objects/Resources/Kinds.
-medium.com
-
-Kubernetes — Ingress Overview
-What is K8s Ingress? — Introduction to Kubernetes Ingress.
-medium.com
-
-Kubernetes — Services Overview
-What are Kubernetes Services? — Introduction to Kubernetes Service.
-medium.com
-
-Kubernetes: what are Endpoints
-Usually, we don’t see Endpoints objects when using Kubernetes Services, as they are working under the hood, similarly…
-itnext.io
-
-This article will be updated with more details theory and practical included as I progress on my learning journey. Stay tuned. The notes is for sure going to help you learn more and crack your next Kubernetes interview.
-
-Ending Notes
-
-I am active on Medium so please reach out to me in case you want to have a conversation. Happy to help.
-For any freelancing work or a healthy conversation — reach me out at
-vivek.sinless@gmail.com or LinkedIn
-
-Kubernetes
-
-Container Orchestration
-
-Containers
-
-K8s
-
-DevOps
-
-22
-
-
-2
-
-
-Vivek Singh
-Written by Vivek Singh
-297 followers
-·
-108 following
-Software Developer. I write about Full Stack, NLP and Blockchain. Buy me a coffee - buymeacoffee.com/viveksinless
-
-
-Follow
-Help
-
-Status
-
-About
-
-Careers
-
-Press
-
-Blog
-
-Store
-
-Privacy
-
-Rules
-
-Terms
-
-Text to speech
