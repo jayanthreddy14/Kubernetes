@@ -1,5 +1,5 @@
+https://veeevek.medium.com/kubernetes-notes-get-started-8a05f06b5479
 
-Content
 
 ![alt text](images/image.png)
 
