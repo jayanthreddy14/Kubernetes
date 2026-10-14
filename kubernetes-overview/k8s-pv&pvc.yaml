@@ -1,0 +1,136 @@
+# =========================
+# 💾 PersistentVolume (PV) - Manual Binding Example
+# =========================
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-manual
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:                   # Local path for demo
+    path: /data/manual
+
+---
+# =========================
+# 💾 PersistentVolumeClaim (PVC) bound to specific PV
+# =========================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-manual
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  volumeName: pv-manual        # Explicitly bind to PV by name
+
+---
+# 📦 Deployment using manually bound PVC
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-manual
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: manual
+  template:
+    metadata:
+      labels:
+        app: manual
+    spec:
+      containers:
+      - name: app
+        image: mysql:5.7
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: rootpassword
+        volumeMounts:
+        - name: storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: pvc-manual
+
+---
+# =========================
+# 💾 PersistentVolumeClaim (PVC) without PV - Dynamic Provisioning
+# =========================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-dynamic
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: standard   # Uses default StorageClass (cloud provisioned)
+
+---
+# 📦 Deployment using dynamically provisioned PVC
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-dynamic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dynamic
+  template:
+    metadata:
+      labels:
+        app: dynamic
+    spec:
+      containers:
+      - name: app
+        image: nginx:latest
+        volumeMounts:
+        - name: storage
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: pvc-dynamic
+
+
+# Explanation
+# 1. Manual Binding (PVC → PV by name)
+# volumeName: pv-manual in the PVC explicitly binds it to the PV named pv-manual.
+
+# Useful when you want strict control over which PV is used.
+
+# Pod mounts this PVC → data persists in /data/manual.
+
+# 2. Without PV (Dynamic Provisioning)
+# PVC requests storage (1Gi) but doesn’t specify a PV.
+
+# Kubernetes uses a StorageClass (e.g., standard) to automatically create a PV behind the scenes (cloud disk, etc.).
+
+# Pod mounts this PVC → data persists in the dynamically created disk.
+
+# If no StorageClass exists, PVC will stay in Pending state until a matching PV is created.
+
+
+# Key Differences
+# Manual binding: You explicitly tie PVC to PV by name. Good for on‑prem clusters or when you want control.
+
+# Dynamic provisioning: PVC just requests storage, Kubernetes auto‑creates PV using a StorageClass. Common in cloud environments (AWS, GCP, Azure).
+
+# 🛠️ Useful Commands
+# bash
+# kubectl apply -f storage-demo.yaml
+# kubectl get pv
+# kubectl get pvc
+# kubectl describe pvc pvc-manual
+# kubectl describe pvc pvc-dynamic
+# kubectl get pods

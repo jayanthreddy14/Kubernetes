@@ -19,3 +19,35 @@ spec:
         image: nginx:1.7.9
         ports:
         - containerPort: 80
+
+# 1.Deployment metadata
+
+# metadata:
+#   labels:
+#     app: nginx
+# This label is attached to the Deployment object itself.
+
+# It helps you identify this Deployment when listing or querying resources.
+
+# Pod template metadata
+
+# yaml
+# template:
+#   metadata:
+#     labels:
+#       app: nginx
+# These labels are applied to every Pod created by the Deployment.
+
+# This is crucial because the selector uses these labels to know which Pods belong to the Deployment.
+
+
+# 3.How selectors use labels
+# In your spec:
+
+# yaml
+# selector:
+#   matchLabels:
+#     app: nginx
+# This means: “Manage all Pods that have the label app=nginx.”
+
+# If the Pod template didn’t have the same label, the Deployment wouldn’t know which Pods to control.

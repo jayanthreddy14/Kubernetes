@@ -1,0 +1,90 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prod-ingress
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/limit-rps: "20"
+spec:
+  tls:
+  - hosts:
+    - app.example.com
+    - api.example.com
+    - canary.example.com
+    secretName: prod-tls-secret
+
+  rules:
+  # 1️⃣ Path-based routing (microservices under one domain)
+  - host: app.example.com
+    http:
+      paths:
+      - path: /catalog
+        pathType: Prefix
+        backend:
+          service:
+            name: catalog-svc
+            port:
+              number: 8080
+      - path: /orders
+        pathType: Prefix
+        backend:
+          service:
+            name: orders-svc
+            port:
+              number: 8080
+      - path: /payments
+        pathType: Prefix
+        backend:
+          service:
+            name: payments-svc
+            port:
+              number: 8080
+
+  # 2️⃣ Host-based routing (different subdomains)
+  - host: api.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-svc
+            port:
+              number: 8080
+  - host: www.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-svc
+            port:
+              number: 80
+
+
+# Explanation for Interviews
+# 🔐 TLS Termination
+# spec.tls ensures traffic is encrypted with HTTPS.
+
+# cert-manager.io/cluster-issuer: letsencrypt-prod automates certificate management.
+
+# Interview tip: Always mention TLS in production — it shows you understand security.
+
+# 📂 Path-Based Routing
+# One domain (app.example.com) serves multiple microservices.
+
+# /catalog, /orders, /payments → routed to different services.
+
+# Use case: E‑commerce platforms.
+
+# 🌐 Host-Based Routing
+# Different subdomains route to different services.
+
+# api.example.com → backend API, www.example.com → frontend.
+
+# Use case: SaaS apps with separate frontend and API.

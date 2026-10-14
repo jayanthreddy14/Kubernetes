@@ -1,0 +1,182 @@
+# =========================
+# 🟢 Pod
+# =========================
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  labels:
+    app: demo
+spec:
+  containers:
+  - name: demo
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+
+# Commands:
+# kubectl apply -f pod.yaml
+# kubectl get pods
+# kubectl describe pod my-pod
+# kubectl logs my-pod
+# kubectl delete pod my-pod
+
+# =========================
+# 📦 Deployment
+# =========================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      containers:
+      - name: demo
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+# Commands:
+# kubectl apply -f deployment.yaml
+# kubectl get deployments
+# kubectl describe deployment demo-deployment
+# kubectl scale deployment demo-deployment --replicas=3
+# kubectl rollout status deployment demo-deployment
+# kubectl delete deployment demo-deployment
+
+# =========================
+# 🌐 Service
+# =========================
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-service
+spec:
+  selector:
+    app: demo
+  ports:
+  - port: 80
+    targetPort: 80
+  type: NodePort
+
+# Commands:
+# kubectl apply -f service.yaml
+# kubectl get services
+# kubectl describe service demo-service
+# kubectl delete service demo-service
+
+# =========================
+# ⚙️ ConfigMap
+# =========================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-config
+data:
+  APP_MODE: "production"
+  APP_COLOR: "blue"
+
+# Commands:
+# kubectl apply -f configmap.yaml
+# kubectl get configmaps
+# kubectl describe configmap demo-config
+# kubectl delete configmap demo-config
+
+# =========================
+# 🔐 Secret
+# =========================
+apiVersion: v1
+kind: Secret
+metadata:
+  name: demo-secret
+type: Opaque
+data:
+  DB_PASSWORD: cGFzc3dvcmQ=   # base64("password")
+
+# Commands:
+# kubectl apply -f secret.yaml
+# kubectl get secrets
+# kubectl describe secret demo-secret
+# kubectl delete secret demo-secret
+
+# =========================
+# 🚪 Ingress
+# =========================
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demo-ingress
+spec:
+  rules:
+  - host: demo.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-service
+            port:
+              number: 80
+
+# Commands:
+# kubectl apply -f ingress.yaml
+# kubectl get ingress
+# kubectl describe ingress demo-ingress
+# kubectl delete ingress demo-ingress
+
+# =========================
+# 💾 PersistentVolume & PVC
+# =========================
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: demo-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /data/demo
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: demo-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+# Commands:
+# kubectl apply -f pv-pvc.yaml
+# kubectl get pv,pvc
+# kubectl describe pv demo-pv
+# kubectl describe pvc demo-pvc
+# kubectl delete pvc demo-pvc
+# kubectl delete pv demo-pv
+
+# =========================
+# 🗂️ Namespace
+# =========================
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo-namespace
+
+# Commands:
+# kubectl apply -f namespace.yaml
+# kubectl get namespaces
+# kubectl describe namespace demo-namespace
+# kubectl delete namespace demo-namespace
