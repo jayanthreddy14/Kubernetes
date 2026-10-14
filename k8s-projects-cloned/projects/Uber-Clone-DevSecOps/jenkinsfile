@@ -1,0 +1,120 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'jdk17'
+        nodejs 'node16'
+    }
+
+    environment {
+        SCANNER_HOME = tool 'sonar-scanner'
+        DOCKER_IMAGE = 'NotHarshhaa/uber:latest'
+        SONAR_PROJECT_NAME = 'Uber'
+        SONAR_PROJECT_KEY = 'Uber'
+    }
+
+    options {
+        timestamps() // Adds timestamps to logs for better debugging
+    }
+
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'master', url: 'https://github.com/NotHarshhaa/uber-clone.git'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh '''
+                        $SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectName=${SONAR_PROJECT_NAME} \
+                        -Dsonar.projectKey=${SONAR_PROJECT_KEY}
+                    '''
+                }
+            }
+        }
+
+        stage('Quality Gate Check') {
+            steps {
+                script {
+                    def qualityGate = waitForQualityGate abortPipeline: true, credentialsId: 'Sonar-token'
+                    if (qualityGate.status != 'OK') {
+                        error "❌ SonarQube Quality Gate failed!"
+                    }
+                }
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('OWASP Dependency Check') {
+            steps {
+                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+
+        stage('Trivy File System Scan') {
+            steps {
+                sh 'trivy fs . | tee trivy-fs-report.txt'
+            }
+        }
+
+        stage('Docker Build & Push') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
+                        sh """
+                            echo "🔨 Building Docker Image..."
+                            docker build -t uber .
+                            docker tag uber ${DOCKER_IMAGE}
+                            
+                            echo "🚀 Pushing Docker Image to Registry..."
+                            docker push ${DOCKER_IMAGE}
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Trivy Image Scan') {
+            steps {
+                sh 'trivy image ${DOCKER_IMAGE} | tee trivy-image-report.txt'
+            }
+        }
+
+        stage('Deploy Docker Container') {
+            steps {
+                sh """
+                    echo "🛠️ Stopping existing container (if running)..."
+                    docker stop uber || true
+                    docker rm uber || true
+                    
+                    echo "🚀 Running new container..."
+                    docker run -d --name uber -p 3000:3000 ${DOCKER_IMAGE}
+                """
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Build and Deployment Completed Successfully!"
+        }
+        failure {
+            echo "❌ Build Failed! Check logs for more details."
+        }
+    }
+}

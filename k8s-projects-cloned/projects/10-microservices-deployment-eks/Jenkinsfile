@@ -1,0 +1,103 @@
+pipeline {
+    agent any
+
+    environment {
+        SCANNER_HOME = tool 'sonar-scanner'
+    }
+
+    stages {
+        stage('Git Checkout') {
+            steps {
+                git branch: 'latest', url: 'https://github.com/SushantOps/10-Tier-MicroService-Appliction.git'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar') {
+                    sh '''$SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectKey=10-Tier \
+                        -Dsonar.projectName=10-Tier \
+                        -Dsonar.java.binaries=.'''
+                }
+            }
+        }
+
+        stage('Build & Push Docker Images') {
+            parallel {
+                stage('adservice') {
+                    steps { buildAndPush('adservice') }
+                }
+                stage('cartservice') {
+                    steps { buildAndPush('cartservice/src') }
+                }
+                stage('checkoutservice') {
+                    steps { buildAndPush('checkoutservice') }
+                }
+                stage('currencyservice') {
+                    steps { buildAndPush('currencyservice') }
+                }
+                stage('emailservice') {
+                    steps { buildAndPush('emailservice') }
+                }
+                stage('frontend') {
+                    steps { buildAndPush('frontend') }
+                }
+                stage('loadgenerator') {
+                    steps { buildAndPush('loadgenerator') }
+                }
+                stage('paymentservice') {
+                    steps { buildAndPush('paymentservice') }
+                }
+                stage('productcatalogservice') {
+                    steps { buildAndPush('productcatalogservice') }
+                }
+                stage('recommendationservice') {
+                    steps { buildAndPush('recommendationservice') }
+                }
+                stage('shippingservice') {
+                    steps { buildAndPush('shippingservice') }
+                }
+            }
+        }
+
+        stage('K8s Deploy') {
+            steps {
+                withKubeConfig(
+                    caCertificate: '',
+                    clusterName: 'my-eks2',
+                    contextName: '',
+                    credentialsId: 'k8-token',
+                    namespace: 'webapps',
+                    restrictKubeConfigAccess: false,
+                    serverUrl: 'https://EBCE08CF45C3AA5A574E126370E5D4FC.gr7.ap-south-1.eks.amazonaws.com'
+                ) {
+                    sh 'kubectl apply -f deployment-service.yml'
+                    sh 'kubectl get pods'
+                    sh 'kubectl get svc'
+                }
+            }
+        }
+    }
+
+    // Reusable build & push function
+    // Adjust image name prefix if needed
+    post {
+        always {
+            echo "Pipeline execution complete!"
+        }
+    }
+}
+
+def buildAndPush(String servicePath) {
+    script {
+        def imageName = "sushantkapare1717/${servicePath.tokenize('/')[-1]}:latest"
+        withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+            dir("/var/lib/jenkins/workspace/10-Tier/src/${servicePath}") {
+                sh "docker build -t ${imageName} ."
+                sh "docker push ${imageName}"
+                sh "docker rmi ${imageName}"
+            }
+        }
+    }
+}

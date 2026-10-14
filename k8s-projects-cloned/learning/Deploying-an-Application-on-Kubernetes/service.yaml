@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: notes-app-service  # Service name
+  labels:
+    app: notes-app
+    app.kubernetes.io/name: notes-app
+spec:
+  type: LoadBalancer  # Expose the service externally
+  selector:
+    app: notes-app  # Selector to match pods with the same label
+  ports:
+    - port: 80          # Port exposed externally
+      targetPort: 3000  # Port on the container
+      protocol: TCP
