@@ -1,0 +1,103 @@
+# canary Deployment
+# Canary means gradually rolling out a new version to a subset of users while most still hit the stable version.
+
+# Key Points
+# Stable Deployment: majority of replicas.
+
+# Canary Deployment: few replicas with new version.
+
+# Service selector matches both → traffic is split proportionally.
+
+# Enterprises often use Ingress controllers (NGINX, Istio) for fine‑grained traffic routing (e.g., 5% → canary, 95% → stable).
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-stable
+  labels:
+    app: myapp
+    track: stable
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: myapp
+      track: stable
+  template:
+    metadata:
+      labels:
+        app: myapp
+        track: stable
+    spec:
+      containers:
+      - name: myapp
+        image: myapp:v1.0.0
+        ports:
+        - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-canary
+  labels:
+    app: myapp
+    track: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+      track: canary
+  template:
+    metadata:
+      labels:
+        app: myapp
+        track: canary
+    spec:
+      containers:
+      - name: myapp
+        image: myapp:v2.0.0
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-stable
+spec:
+  selector:
+    app: myapp
+    track: stable
+  ports:
+  - port: 80
+    targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-canary
+spec:
+  selector:
+    app: myapp
+    track: canary
+  ports:
+  - port: 80
+    targetPort: 8080
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: myapp
+spec:
+  host: myapp.apps.example.com
+  to:
+    kind: Service
+    name: myapp-stable
+    weight: 90   # 90% traffic
+  alternateBackends:
+  - kind: Service
+    name: myapp-canary
+    weight: 10   # 10% traffic
+  port:
+    targetPort: 80
+

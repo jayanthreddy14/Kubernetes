@@ -1,3 +1,6 @@
+# In Recreate, Kubernetes terminates all old pods first, then starts new ones.
+# This means downtime during rollout, but it ensures a clean switch.
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:

@@ -1,0 +1,130 @@
+
+# ## 🟢 What is a DaemonSet?
+# - A **DaemonSet** ensures that **one pod runs on every node** (or a subset of nodes).
+# - When new nodes join the cluster → the pod is scheduled automatically.
+# - When nodes are removed → the pod is removed too.
+# - Commonly used for:
+#   - **Monitoring agents** (Prometheus Node Exporter, Datadog).
+#   - **Logging agents** (Fluentd, Filebeat).
+#   - **Networking components** (kube‑proxy, CNI plugins).
+#   - **Storage daemons** (Ceph, GlusterFS).
+
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-monitor             # Name of the DaemonSet
+  namespace: kube-system         # System namespace (common for infra agents)
+  labels:
+    app: node-monitor
+spec:
+  selector:                      # Must match pod template labels
+    matchLabels:
+      app: node-monitor
+  template:                      # Pod template
+    metadata:
+      labels:
+        app: node-monitor
+    spec:
+      containers:
+      - name: node-exporter
+        image: prom/node-exporter:latest   # Monitoring agent image
+        ports:
+        - containerPort: 9100              # Expose metrics port
+        resources:                         # Resource requests/limits
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+        livenessProbe:                     # Health check
+          httpGet:
+            path: /
+            port: 9100
+          initialDelaySeconds: 10
+          periodSeconds: 15
+        readinessProbe:                    # Ready to serve traffic
+          httpGet:
+            path: /
+            port: 9100
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      tolerations:                         # Allow scheduling on all nodes
+      - operator: "Exists"
+      nodeSelector:                         # Optional: restrict to certain nodes
+        kubernetes.io/os: linux
+
+
+# ## ⚙️ Explanation of Fields
+# - **`kind: DaemonSet`** → Ensures pod runs on every node.
+# - **`selector`** → Matches pod labels so DaemonSet manages them.
+# - **`template`** → Pod spec (like Deployment).
+# - **`resources`** → Prevents agents from consuming too much CPU/memory.
+# - **`probes`** → Ensures unhealthy agents are restarted.
+# - **`tolerations`** → Allows pods to run even on tainted nodes (e.g., master nodes).
+# - **`nodeSelector`** → Restrict DaemonSet to specific nodes (e.g., only Linux nodes).
+
+# ---
+
+# ## 🏢 Enterprise Use Cases
+# - **Monitoring/logging agents** → Always needed on every node.
+# - **Networking plugins** → Must run everywhere for connectivity.
+# - **Security agents** → Runtime monitoring (Falco, Aqua).
+# - **Custom node services** → GPU drivers, hardware metrics collectors.
+
+# ---
+
+# ## 🔄 Lifecycle Behavior
+# - Pods are automatically created on **every node**.
+# - When a node is added → DaemonSet schedules a pod there.
+# - When a node is removed → DaemonSet removes the pod.
+# - Scaling is tied to **node count**, not replicas.
+
+# 🔄 Step‑by‑Step Behavior
+# Controller Creation
+
+# Kubernetes sees kind: DaemonSet and creates a DaemonSet controller object.
+
+# This controller’s job is to ensure the specified pod template runs on every eligible node.
+
+# Pod Scheduling
+
+# For each node in the cluster, the DaemonSet schedules one pod based on the template.
+
+# Example: If you have 5 worker nodes, you’ll get 5 pods (node-monitor on each node).
+
+# Node Lifecycle Awareness
+
+# If a new node joins the cluster → the DaemonSet automatically creates a pod there.
+
+# If a node is removed → the pod on that node is terminated.
+
+# Scaling is tied to node count, not replicas.
+
+# Pod Behavior
+
+# Each pod runs the node-exporter container (from the YAML).
+
+# It exposes metrics on port 9100.
+
+# Probes (livenessProbe, readinessProbe) continuously check health.
+
+# Resource limits ensure the agent doesn’t consume too much CPU/memory.
+
+# Tolerations allow pods to run even on tainted nodes (like master nodes).
+
+# NodeSelector ensures pods only run on Linux nodes.
+
+# Cluster‑Wide Service
+
+# Effectively, you now have a monitoring agent running everywhere.
+
+# Tools like Prometheus can scrape metrics from each node via these pods.
+
+# This guarantees consistent coverage across the cluster.
+
+
+# ✅ **Summary**:  
+# DaemonSets are for **cluster‑wide services** that must run everywhere (or on selected nodes). They differ from Deployments (replica‑based) and StatefulSets (identity‑based) by being **node‑based**.
+

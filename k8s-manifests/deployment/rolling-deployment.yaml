@@ -1,3 +1,17 @@
+# In RollingUpdate, Kubernetes gradually replaces pods with new ones.
+# This minimizes downtime and allows monitoring during rollout.
+
+# Step‑by‑Step
+# Suppose you have 4 replicas running the old version.
+
+# Kubernetes can take down up to 2 old pods (maxUnavailable: 2).
+
+# At the same time, it can add up to 2 new pods (maxSurge: 2).
+
+# So during rollout, you might temporarily have 6 pods total (4 old + 2 new).
+
+# As new pods become ready, Kubernetes continues replacing old ones until all are updated.
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
